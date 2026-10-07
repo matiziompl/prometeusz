@@ -123,7 +123,7 @@ Prometeusz is pre-configured for Docker. A multi-stage build creates a tiny, pro
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/<your-username>/prometeusz.git
+   git clone https://github.com/<matiziompl>/prometeusz.git
    cd prometeusz
    ```
 

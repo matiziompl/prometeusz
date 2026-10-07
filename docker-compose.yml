@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  prometeusz:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: prometeusz:latest
+    container_name: prometeusz
+    restart: unless-stopped
+    ports:
+      # Port panelu webowego Prometeusz Web UI wystawiony do LAN
+      - "${PORT:-6767}:6767"
+    volumes:
+      # 1. Baza danych sesji, transkrypty i settings.json z Antigravity CLI:
+      - ${ANTIGRAVITY_CLI_HOST_DIR:-~/.gemini/antigravity-cli}:/home/developer/.gemini/antigravity-cli:rw
+      # 2. Binarka agy z piaskownicy (dla PTY i chat_engine):
+      - ${AGY_BIN_HOST_PATH:-~/.local/bin/agy}:/usr/local/bin/agy:ro
+      # 3. Przestrzeń robocza z projektami:
+      - ${WORKSPACE_HOST_DIR:-~/workspace}:/workspace:rw
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PORT=6767
+      - ANTIGRAVITY_CLI_DIR=/home/developer/.gemini/antigravity-cli
+      - AGY_BIN=/usr/local/bin/agy
+      - WORKSPACE_DIR=/workspace
+    # Wymagane dla obsługi pseudoterminala (PTY) w interaktywnej konsoli:
+    stdin_open: true
+    tty: true
+    labels:
+          - "com.centurylinklabs.watchtower.enable=false"
